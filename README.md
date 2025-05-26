@@ -9,8 +9,9 @@
 * 🔍 **Schema Discovery**: Lists collections and inspects sample documents
 * 📊 **Field Analysis**: Identifies top field values, data types, and trends
 * 🔗 **Relationship Detection**: Finds links between collections (e.g. `user_id → users._id`)
-* 🤖 **AI-Powered Question Generator**: Uses ChatGPT to generate high-value questions from your schema
-* 🧠 **Scored Insights**: Each question is scored by relevance, insight depth, relationship use, and chartability
+* 🤖 **AI-Powered Insight Generator**: Uses ChatGPT to generate high-value questions from your schema
+* 🧠 **Business-Focused Questions**: Questions are designed to guide decision-making and reveal growth opportunities
+* 📈 **Scored Insights**: Each question is rated by relevance, depth, relational complexity, and visualization potential
 
 ---
 
@@ -66,20 +67,26 @@ src/
 │   ├── analyzer.ts          # Field value distributions
 │   └── relationships.ts     # Detect cross-collection links
 ├── generator/
-│   └── questions.ts         # AI-powered question generation
+│   └── questions.ts         # Question creation helpers
 └── utils/
-    └── llm.ts               # OpenAI integration
+    └── llm.ts               # OpenAI integration for smart questions
 ```
 
 ---
 
-## 📈 Example Output
+## 📊 Example Output
 
 ```bash
-🤖 Smart AI Questions:
-- What are the most active markets based on the number of activities? (score: 18)
-- What is the trend of activities over time? (score: 17)
-- What is the average activity per user? (score: 16)
+📊 Strategic Business Questions:
+- What is the growth rate of markets in different countries?
+  🔹 Relevance: 5
+  🔹 Insight Depth: 4
+  🔹 Relationships: 3
+  🔹 Visualization Fit: 5
+  🔸 Total Score: 17
+
+- How many unique users engage with each market over a specific period?
+  🔹 Total Score: 16
 ...
 ```
 
@@ -87,10 +94,11 @@ src/
 
 ## 📌 Roadmap Ideas
 
-* [ ] Auto-generate MongoDB queries for each question
-* [ ] Export insights as JSON or Markdown
-* [ ] Web UI with visual dashboards
-* [ ] Integration with chart libraries (e.g. Chart.js, ECharts)
+* [ ] Generate aggregation queries from selected questions
+* [ ] Export results as JSON/CSV/Markdown
+* [ ] Web UI for interactive question selection and chart display
+* [ ] Smart tagging of questions by business area (growth, engagement, etc.)
+* [ ] Add filters (score, type, collection, business focus)
 
 ---
 
