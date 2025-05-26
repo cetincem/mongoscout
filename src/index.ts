@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 import { discoverCollections } from "./mongo/discover";
 import { analyzeCollectionFields } from "./mongo/analyzer";
 import { detectRelationships } from "./mongo/relationships";
-import { generateSmartQuestionsFromLLM } from "./utils/llm";
+import { generateBusinessQuestionsFromLLM } from "./utils/llm";
 
 dotenv.config(); // for using .env file if needed
 
@@ -55,12 +55,22 @@ async function main() {
         .map((r) => `${r.fromField} → ${r.toCollection}.${r.toField}`),
     }));
 
-    const aiQuestions = await generateSmartQuestionsFromLLM({
+    const businessQuestions = await generateBusinessQuestionsFromLLM({
       collections: compactSchema,
     });
 
-    console.log("\n🤖 Smart AI Questions:");
-    aiQuestions.forEach((q) => console.log("-", q));
+    console.log("\n📊 Strategic Business Questions:");
+    businessQuestions
+      .sort((a, b) => b.totalScore - a.totalScore)
+      .forEach((q) => {
+        console.log(`- ${q.question}`);
+        console.log(`  🔹 Relevance: ${q.relevance}`);
+        console.log(`  🔹 Insight Depth: ${q.insightDepth}`);
+        console.log(`  🔹 Relationships: ${q.relationshipUsage}`);
+        console.log(`  🔹 Visualization Fit: ${q.visualizationFit}`);
+        console.log(`  🔸 Total Score: ${q.totalScore}`);
+        console.log();
+      });
   } catch (err) {
     console.error("❌ Error connecting to MongoDB:", err);
   } finally {
