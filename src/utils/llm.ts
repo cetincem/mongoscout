@@ -1,5 +1,5 @@
-import { OpenAI } from 'openai';
-import * as dotenv from 'dotenv';
+import { OpenAI } from "openai";
+import * as dotenv from "dotenv";
 dotenv.config();
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -13,44 +13,92 @@ export interface ScoredQuestion {
   totalScore: number;
 }
 
-export async function generateSmartQuestionsFromLLM(schema: any): Promise<ScoredQuestion[]> {
+export async function generateSmartQuestionsFromLLM(
+  schema: any
+): Promise<ScoredQuestion[]> {
   const messages = [
     {
-      role: 'system',
+      role: "system",
       content: `You are a senior data analyst. Given the structure of a MongoDB database (collections, fields, and relationships), generate as many valuable business questions as possible that could be asked based on this data.
+      For each question, rate it on a scale of 1 to 5 for the following:
+      - relevance
+      - insightDepth
+      - relationshipUsage
+      - visualizationFit
 
-For each question, rate it on a scale of 1 to 5 for the following:
-- relevance
-- insightDepth
-- relationshipUsage
-- visualizationFit
-
-Respond in JSON format as an array.`
+      Respond in JSON format as an array.`,
     },
     {
-      role: 'user',
-      content: JSON.stringify(schema, null, 2)
-    }
+      role: "user",
+      content: JSON.stringify(schema, null, 2),
+    },
   ];
 
   const res = await openai.chat.completions.create({
-    model: 'gpt-4',
+    model: "gpt-4",
     temperature: 0.7,
-    messages: messages as any // ✅ force acceptable structure without fake types
+    messages: messages as any, // ✅ force acceptable structure without fake types
   });
 
   try {
-    const parsed = JSON.parse(res.choices[0].message.content || '[]');
+    const parsed = JSON.parse(res.choices[0].message.content || "[]");
     return parsed.map((q: any) => ({
       ...q,
       totalScore:
         (q.relevance || 0) +
         (q.insightDepth || 0) +
         (q.relationshipUsage || 0) +
-        (q.visualizationFit || 0)
+        (q.visualizationFit || 0),
     }));
   } catch (e) {
-    console.error('❌ Failed to parse AI response:', e);
+    console.error("❌ Failed to parse AI response:", e);
+    return [];
+  }
+}
+
+export async function generateBusinessQuestionsFromLLM(
+  schema: any
+): Promise<ScoredQuestion[]> {
+  const messages = [
+    {
+      role: "system",
+      content: `You are a business strategist and data analyst. 
+        Given the structure of a MongoDB database (collections, fields, and relationships), 
+        generate as many high-value business questions as possible that can lead to better decision-making, 
+        performance improvements, customer insights, operational efficiency, or business growth.
+
+        For each question, rate it from 1 to 5 for:
+        - relevance
+        - insightDepth
+        - relationshipUsage
+        - visualizationFit
+
+        Respond in JSON format as an array.`,
+    },
+    {
+      role: "user",
+      content: JSON.stringify(schema, null, 2),
+    },
+  ];
+
+  const res = await openai.chat.completions.create({
+    model: "gpt-4",
+    temperature: 0.7,
+    messages: messages as any,
+  });
+
+  try {
+    const parsed = JSON.parse(res.choices[0].message.content || "[]");
+    return parsed.map((q: any) => ({
+      ...q,
+      totalScore:
+        (q.relevance || 0) +
+        (q.insightDepth || 0) +
+        (q.relationshipUsage || 0) +
+        (q.visualizationFit || 0),
+    }));
+  } catch (e) {
+    console.error("❌ Failed to parse AI response:", e);
     return [];
   }
 }
