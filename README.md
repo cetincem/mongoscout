@@ -1,5 +1,9 @@
 # MongoScout
 
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18.x-green.svg)](https://nodejs.org/)
+[![OpenAI GPT-4](https://img.shields.io/badge/ai-gpt4-orange)](https://openai.com)
+
 **MongoScout** is an intelligent exploration and analysis tool for MongoDB. It automatically discovers collections, analyzes document structure, detects relationships, and uses AI to generate meaningful business questions with scoring.
 
 ---
@@ -76,6 +80,9 @@ src/
 
 ## 📊 Example Output
 
+<details>
+<summary>🧠 Sample Output</summary>
+
 ```bash
 📊 Strategic Business Questions:
 - What is the growth rate of markets in different countries?
@@ -90,6 +97,8 @@ src/
 ...
 ```
 
+</details>
+
 ---
 
 ## 📌 Roadmap Ideas
@@ -99,6 +108,7 @@ src/
 * [ ] Web UI for interactive question selection and chart display
 * [ ] Smart tagging of questions by business area (growth, engagement, etc.)
 * [ ] Add filters (score, type, collection, business focus)
+* [ ] Implement step-based caching to avoid rerunning discovery every time
 
 ---
 
