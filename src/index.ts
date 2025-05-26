@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import { discoverCollections } from "./mongo/discover";
 import { analyzeCollectionFields } from "./mongo/analyzer";
 import { detectRelationships } from "./mongo/relationships";
+import { generateSmartQuestionsFromLLM } from "./utils/llm";
 
 dotenv.config(); // for using .env file if needed
 
@@ -45,6 +46,21 @@ async function main() {
         } (${rel.matchRate * 100}%)`
       );
     });
+
+    const compactSchema = summaries.map((s) => ({
+      name: s.name,
+      fields: s.sampleFields.map((f) => f.name),
+      relationships: rels
+        .filter((r) => r.fromCollection === s.name)
+        .map((r) => `${r.fromField} → ${r.toCollection}.${r.toField}`),
+    }));
+
+    const aiQuestions = await generateSmartQuestionsFromLLM({
+      collections: compactSchema,
+    });
+
+    console.log("\n🤖 Smart AI Questions:");
+    aiQuestions.forEach((q) => console.log("-", q));
   } catch (err) {
     console.error("❌ Error connecting to MongoDB:", err);
   } finally {
