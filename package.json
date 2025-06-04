@@ -17,7 +17,7 @@
     "openai": "^4.103.0"
   },
   "devDependencies": {
-    "@types/node": "^22.15.21",
+    "@types/node": "^22.15.29",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
